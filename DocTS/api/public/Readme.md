@@ -1,13 +1,13 @@
-#Document Tracking System API
+# Document Tracking System API
 
 
 
-##1 printPost
+## 1 printPost
 
-###Description:
+### Description:
 Fetch the data from database.
 
-###Fields:
+### Fields:
     dtnumber
     document_title
     doc_type
@@ -17,7 +17,7 @@ Fetch the data from database.
     tag
 
 
-###Output sample
+### Output sample
 
 {
     "status": "success",
@@ -36,4 +36,4 @@ Fetch the data from database.
 
 
 
-####Not Final
+#### Not Final
