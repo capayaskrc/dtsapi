@@ -18,13 +18,17 @@ Fetch the data from database.
 
 
 ### PHP CODE
+
+
 $app->post('/fetchDoc', function (Request $request, Response $response, array $args) {
     $servername = "localhost";
     $username = "root";
     $password = "";
     $dbname = "dtsystem";
+    
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
+    
     // Check connection
     if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -34,8 +38,6 @@ $app->post('/fetchDoc', function (Request $request, Response $response, array $a
     if ($result->num_rows > 0) {
     $data=array();
     while($row = $result->fetch_assoc()) {
-
-
     array_push($data,array(
     "dtnumber"=>$row["dtnumber"]
     ,"document_title"=>$row["document_title"]
