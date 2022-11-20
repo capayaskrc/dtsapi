@@ -53,8 +53,8 @@ Fetch the data from database.
     $response->getBody()->write(array("status"=>"success","data"=>null));
     }
     $conn->close();
-return $response;
-});
+    return $response;
+    });
 
 ### Output sample
         {
