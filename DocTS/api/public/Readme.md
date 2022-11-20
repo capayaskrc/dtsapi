@@ -57,20 +57,20 @@ return $response;
 });
 
 ### Output sample
-{
-    "status": "success",
-    "data": [
         {
-            "dtnumber": "XXXX-XXX1",
-            "document_title": "1",
-            "doc_type": "1",
-            "document_origin": "1",
-            "date_recieved": "1",
-            "document_destination": "1",
-            "tag": "1"
+            "status": "success",
+            "data": [
+                {
+                    "dtnumber": "XXXX-XXX1",
+                    "document_title": "1",
+                    "doc_type": "1",
+                    "document_origin": "1",
+                    "date_recieved": "1",
+                    "document_destination": "1",
+                    "tag": "1"
+                }
+            ]
         }
-    ]
-}
 
 ## 2.searchDoc
 Search documement via dtnumber or Document Tracking Number.
@@ -105,8 +105,8 @@ Search documement via dtnumber or Document Tracking Number.
     $response->getBody()->write(json_encode($data_body));
     } else {$response->getBody()->write(array("status"=>"success","data"=>null));
     }$conn->close();
-    return $response;
-    });
+        return $response;
+        });
 
 
 
@@ -134,8 +134,8 @@ Delete Document and its Details in the Record.
     if ($conn->query($sql) === TRUE) {
         $response->getBody()->write(json_encode(array("status"=>"success","data"=>null)));
     }$conn->close();
-    return $response;
-    });
+        return $response;
+        });
 
 
 
@@ -174,8 +174,8 @@ Delete Document and its Details in the Record.
     $response->getBody()->write(json_encode(array("status"=>"error","message"=>$e->getMessage())));
     }
     $conn = null;
-    return $response;
-    });
+        return $response;
+        });
 
 
 
