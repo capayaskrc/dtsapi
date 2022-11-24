@@ -145,7 +145,7 @@ Delete Document and its Details in the Record.
 
 
 ## 4. updateDoc
-    Update Document details.
+Update Document details.
 
 
 ### PHP CODE
