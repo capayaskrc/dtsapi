@@ -22,10 +22,10 @@ Fetch the data from database.
 
 ### PHP CODE
     $app->post('/fetchDoc', function (Request $request, Response $response, array $args) {
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "dtsystem";
+    $servername = "sql578.main-hosting.eu";
+    $username = "u475920781_Dts4d";
+    $password = "Dts4d2022";
+    $dbname = "u475920781_Dts4d";
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
     // Check connection
@@ -58,20 +58,20 @@ Fetch the data from database.
     });
 
 ### Output sample
-{
-    "status": "success",
-    "data": [
         {
-            "dtnumber": "XXXX-XXX1",
-            "document_title": "1",
-            "doc_type": "1",
-            "document_origin": "1",
-            "date_recieved": "1",
-            "document_destination": "1",
-            "tag": "1"
+            "status": "success",
+            "data": [
+                {
+                    "dtnumber": "XXXX-XXX1",
+                    "document_title": "1",
+                    "doc_type": "1",
+                    "document_origin": "1",
+                    "date_recieved": "1",
+                    "document_destination": "1",
+                    "tag": "1"
+                }
+            ]
         }
-    ]
-}
 
 ## 2.searchDoc
 Search documement via dtnumber or Document Tracking Number.
@@ -81,10 +81,13 @@ Search documement via dtnumber or Document Tracking Number.
     $app->post('/searchDoc', function (Request $request, Response $response, array $args) {
     $data=json_decode($request->getBody());
     $dtnumber =$data->dtnumber;
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "dtsystem";
+    
+    
+    $servername = "sql578.main-hosting.eu";
+    $username = "u475920781_Dts4d";
+    $password = "Dts4d2022";
+    $dbname = "u475920781_Dts4d";
+    
     $conn = new mysqli($servername, $username, $password, $dbname);
 
     if ($conn->connect_error) {die("Connection failed: " . $conn->connect_error);
@@ -120,11 +123,12 @@ Delete Document and its Details in the Record.
 ## PHP CODE
     $app->post('/deleteDoc', function (Request $request, Response $response, array $args) {
     $data=json_decode($request->getBody());
-    $dtnumber =$data->dtnumber;
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "dtsystem";;
+    
+    $servername = "sql578.main-hosting.eu";
+    $username = "u475920781_Dts4d";
+    $password = "Dts4d2022";
+    $dbname = "u475920781_Dts4d";
+    
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
     // Check connection
@@ -150,6 +154,7 @@ Update Document details.
 
     app->post('/updateDoc', function (Request $request, Response $response, array $args) {
     $data=json_decode($request->getBody());
+    
     $dtnumber=$data->dtnumber;
     $document_title=$data->document_title;
     $doc_type=$data->doc_type;
@@ -157,13 +162,16 @@ Update Document details.
     $date_recieved=$data->date_recieved;
     $document_destination=$data->document_destination;
     $tag=$data->tag;
+    
     //Database
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "demo";
+    $servername = "sql578.main-hosting.eu";
+    $username = "u475920781_Dts4d";
+    $password = "Dts4d2022";
+    $dbname = "u475920781_Dts4d";
+    
     try {
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);$conn->setAttribute(PDO::ATTR_ERRMODEPDO::ERRMODE_EXCEPTION);
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODEPDO::ERRMODE_EXCEPTION);
     $sql = "UPDATE names set 
     document_title='".$document_title."',
     doc_type='".$doc_type."',
@@ -179,6 +187,104 @@ Update Document details.
     $conn = null;
     return $response;
     });
+
+## 5. insertDoc
+Insert new Document to database.
+
+
+## PHP CODE
+        //************INSERTING DATA TO DATABASE VIA API**************************
+    $app->post('/insertDoc', function (Request $request, Response $response, array $args) {
+    $data=json_decode($request->getBody());
+    //fields
+    $dtnumber=$data->dtnumber;
+    $document_title=$data->document_title;
+    $doc_type=$data->doc_type;
+    $document_origin=$data->document_origin;
+    $date_recieved=$data->date_recieved;
+    $document_destination=$data->document_destination;
+    $tag=$data->tag;
+
+    //Database
+    $servername = "sql578.main-hosting.eu";
+    $username = "u475920781_Dts4d";
+    $password = "Dts4d2022";
+    $dbname = "u475920781_Dts4d";
+
+    try {
+
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname",$username, $password);
+
+    // set the PDO error mode to exception
+    $conn->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+
+    $sql = "INSERT INTO document_fields (dtnumber,document_title,doc_type,document_origin,date_recieved,document_destination,tag)
+    VALUES ('". $dtnumber ."','". $document_title ."','". $doc_type ."','". $document_origin ."','". $date_recieved ."'
+    ,'". $document_destination ."','". $tag ."')";
+    // use exec() because no results are returned
+    $conn->exec($sql);
+    $response->getBody()->write(json_encode(array("status"=>"success","data"=>null)));
+
+    } catch(PDOException $e){
+    $response->getBody()->write(json_encode(array("status"=>"error",
+    "message"=>$e->getMessage())));
+    }
+    $conn = null;
+
+    return $response;
+    });
+    
+   
+ ## 6. validateUser
+ Retrieve User Log in information from database for User log in Validation
+   
+ ## PHP CODE
+   
+        /**************FETCH USER DETAIL FOR VALIDATION************ */
+
+        //validateUser
+
+        $app->post('/validateUser', function (Request $request, Response $response, array $args) {
+
+            $data=json_decode($request->getBody());
+            $user=$data->username;
+            $usermail =$data->email;
+            $userpassword=$data->password;
+
+            //Database
+            $servername = "sql578.main-hosting.eu";
+            $username = "u475920781_Dts4d";
+            $password = "Dts4d2022";
+            $dbname = "u475920781_Dts4d";
+
+            $conn = new mysqli($servername, $username, $password, $dbname);
+
+            if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+            }
+            $sql = "SELECT * FROM user_info where username='". $user ."' OR email='".$usermail."'";
+            $result = $conn->query($sql);
+            if ($result->num_rows > 0) {
+            $data=array();
+            while($row = $result->fetch_assoc()) {
+
+
+            array_push($data,array(
+            "username"=>$row["username"]
+            ,"email"=>$row["email"]
+            ,"password"=>$row["password"]));
+            }
+
+            $data_body=array("status"=>"success","data"=>$data);
+            $response->getBody()->write(json_encode($data_body));
+            } else {
+
+            $response->getBody()->write(array("status"=>"success","data"=>null));
+            }
+            $conn->close();
+
+            return $response;
+            });
 
 
 
