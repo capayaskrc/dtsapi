@@ -72,7 +72,7 @@ Fetch the data from database.
             ]
         }
 
-## 2.searchDoc
+## 2. searchDoc
 Search documement via dtnumber or Document Tracking Number.
 
 ## PHP CODE
@@ -112,7 +112,7 @@ Search documement via dtnumber or Document Tracking Number.
 
 
 
-## 3.deleteDoc
+## 3. deleteDoc
 Delete Document and its Details in the Record.
 
 
@@ -140,7 +140,7 @@ Delete Document and its Details in the Record.
 
 
 
-## 4.updateDoc
+## 4. updateDoc
     Update Document details.
 
 
