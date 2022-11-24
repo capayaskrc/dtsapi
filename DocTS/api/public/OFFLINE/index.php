@@ -149,7 +149,7 @@ $tag=$data->tag;
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "dtsystem";;
+$dbname = "dtsystem";
 try {
 $conn = new
 
@@ -182,7 +182,50 @@ $conn = null;
 
 return $response;
 });
+/**************FETCH USER DETAIL FOR VALIDATION************ */
 
+//validateUser
+
+$app->post('/validateUser', function (Request $request, Response $response, array $args) {
+
+$data=json_decode($request->getBody());
+$user=$data->username;
+$usermail =$data->email;
+$userpassword=$data->password;
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "dtsystem";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+die("Connection failed: " . $conn->connect_error);
+}
+$sql = "SELECT * FROM user_info where username='". $user ."' OR email='".$usermail.'"";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+$data=array();
+while($row = $result->fetch_assoc()) {
+
+
+array_push($data,array(
+"username"=>$row["username"]
+,"email"=>$row["email"]
+,"password"=>$row["password"]));
+}
+
+$data_body=array("status"=>"success","data"=>$data);
+$response->getBody()->write(json_encode($data_body));
+} else {
+
+$response->getBody()->write(array("status"=>"success","data"=>null));
+}
+$conn->close();
+
+return $response;
+})
 
 $app->run();
 ?>
