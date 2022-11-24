@@ -1,6 +1,8 @@
 # Document Tracking System API
 
-
+### API LOCATION
+    
+    xampp/Docts/api/public/index.php
 
 ## 1. fetchDoc
 
@@ -8,13 +10,15 @@
 Fetch the data from database.
 
 ### Fields:
-    dtnumber - Document Tracking Number
-    document_title - Tittle of the Document
-    doc_type - Type of Document 
-    document_origin - Origin of the Document
-    date_recieved - Date of when the documnent is recieved
-    document_destination - Destination of the Document
-    tag - tags of the document
+    {
+    'dtnumber'='00001',
+    'document_title'='Document1',
+    'doc_type'='PDF',
+    'document_origin'='User001',
+    'date_recieved'= '11-19-2022',
+    'document_destination'='Destination of the Document',
+    'tag'='education'
+  }p
 
 
 ### PHP CODE
