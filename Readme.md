@@ -2,7 +2,7 @@
 
 ### API LOCATION
     
-    xampp/Docts/api/public/index.php
+    DocTs/api/public/index.php
 
 ## 1. fetchDoc
 
@@ -18,7 +18,7 @@ Fetch the data from database.
     'date_recieved'= '11-19-2022',
     'document_destination'='Destination of the Document',
     'tag'='education'
-  }p
+  }
 
 
 ### PHP CODE
