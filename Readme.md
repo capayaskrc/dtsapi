@@ -18,7 +18,7 @@ Fetch the data from database.
     'date_recieved'= '11-19-2022',
     'document_destination'='Destination of the Document',
     'tag'='education'
-  }
+     }
 
 
 ### PHP CODE
