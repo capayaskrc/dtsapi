@@ -30,6 +30,7 @@ $app->post('/fetchDoc', function (Request $request, Response $response, array $a
 
 
     array_push($data,array(
+    "idnumver"=>$row["idnumber"]
     "dtnumber"=>$row["dtnumber"]
     ,"document_title"=>$row["document_title"]
     ,"doc_type"=>$row["doc_type"]
@@ -75,6 +76,7 @@ while($row = $result->fetch_assoc()) {
 
 
 array_push($data,array(
+"idnumver"=>$row["idnumber"]    
 "dtnumber"=>$row["dtnumber"]
 ,"document_title"=>$row["document_title"]
 ,"doc_type"=>$row["doc_type"]
@@ -121,8 +123,8 @@ $conn = new PDO("mysql:host=$servername;dbname=$dbname",$username, $password);
 // set the PDO error mode to exception
 $conn->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 
-$sql = "INSERT INTO document_fields (dtnumber,document_title,doc_type,document_origin,date_recieved,document_destination,tag)
-VALUES ('". $dtnumber ."','". $document_title ."','". $doc_type ."','". $document_origin ."','". $date_recieved ."'
+$sql = "INSERT INTO document_fields (idnumber,dtnumber,document_title,doc_type,document_origin,date_recieved,document_destination,tag)
+VALUES ('". $idnum ."','". $dtnumber ."','". $document_title ."','". $doc_type ."','". $document_origin ."','". $date_recieved ."'
 ,'". $document_destination ."','". $tag ."')";
 // use exec() because no results are returned
 $conn->exec($sql);
