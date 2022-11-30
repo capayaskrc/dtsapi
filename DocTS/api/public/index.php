@@ -1,15 +1,55 @@
 <?php
 header("Access-Control-Allow-Origin: *");
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+
 require '../src/vendor/autoload.php';
-$app = new \Slim\App;
+$app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 
 //localhost version
+$app->post(
+    '/insertDoc',
+    function (Request $request, Response $response, array $args) {
+        $data = json_decode($request->getBody());
+        $dtnumber = $data->dtnumber;
+        $document_title = $data->document_title;
+        $doc_type = $data->doc_type;
+        $document_origin = $data->document_origin;
+        $date_received = $data->date_received;
+        $document_destination = $data->document_destination;
+        $tag = $data->tag;
+
+        //Database
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "dtsystem";
+        try {
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            // set the PDO error mode to exception
+            $conn->setAttribute(
+                PDO::ATTR_ERRMODE,
+                PDO::ERRMODE_EXCEPTION
+            );
+            $sql = "INSERT INTO document_fields (dtnumber,document_title,doc_type,document_origin,date_received,document_destination,tag)
+        VALUES ('" . $dtnumber . "','" . $document_title . "','" . $doc_type . "','" . $document_origin .
+                "','" . $date_received . "','" . $document_destination . "','" . $tag . "')";
+            // use exec() because no results are returned
+            $conn->exec($sql);
+            $response->getBody()->write(json_encode(array("status" => "success", "data" => null)));
+        } catch (PDOException $e) {
+            $response->getBody()->write(json_encode(array("status" => "error", "message" => $e->getMessage())));
+        }
+        $conn = null;
+        return $response;
+    }
+);
+
 /**************FETCH DOCUMENT DATA LIST************ */
 
 //endpoint fetchDoc
-$app->post('/fetchDoc', function (Request $request, Response $response, array $args) {//Database
+$app->post('/fetchDoc', function (Request $request, Response $response, array $args) { //Database
 
     $servername = "localhost";
     $username = "root";
@@ -19,31 +59,24 @@ $app->post('/fetchDoc', function (Request $request, Response $response, array $a
     $conn = new mysqli($servername, $username, $password, $dbname);
     // Check connection
     if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+        die("Connection failed: " . $conn->connect_error);
     }
     $sql = "SELECT * FROM document_fields";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
-    $data=array();
-    while($row = $result->fetch_assoc()) {
-
-
-    array_push($data,array(
-    "dtnumber"=>$row["dtnumber"]
-    ,"document_title"=>$row["document_title"]
-    ,"doc_type"=>$row["doc_type"]
-    ,"document_origin"=>$row["document_origin"]
-    ,"date_recieved"=>$row["date_recieved"]
-    ,"document_destination"=>$row["document_destination"]
-    ,"tag"=>$row["tag"]));
-    }
-    $data_body=array("status"=>"success","data"=>$data);
-    $response->getBody()->write(json_encode($data_body));
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($data, array(
+                "dtnumber" => $row["dtnumber"], "document_title" => $row["document_title"], "doc_type" => $row["doc_type"], "document_origin" => $row["document_origin"], "date_received" => $row["date_received"], "document_destination" => $row["document_destination"], "tag" => $row["tag"]
+            ));
+        }
+        $data_body = array("status" => "success", "data" => $data);
+        $response->getBody()->write(json_encode($data_body));
     } else {
-    $response->getBody()->write(array("status"=>"success","data"=>null));
+        $response->getBody()->write(array("status" => "success", "data" => null));
     }
     $conn->close();
-return $response;
+    return $response;
 });
 
 
@@ -53,72 +86,64 @@ return $response;
 
 $app->post('/searchDoc', function (Request $request, Response $response, array $args) {
 
-$data=json_decode($request->getBody());
-$dtnumber =$data->dtnumber;
+    $data = json_decode($request->getBody());
+    $dtnumber = $data->dtnumber;
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "dtsystem";
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "dtsystem";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+    $conn = new mysqli($servername, $username, $password, $dbname);
 
-if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
-}
-$sql = "SELECT * FROM document_fields where dtnumber='". $dtnumber ."'";
-$result = $conn->query($sql);
-if ($result->num_rows > 0) {
-$data=array();
-while($row = $result->fetch_assoc()) {
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $sql = "SELECT * FROM document_fields where dtnumber='" . $dtnumber . "'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($data, array(
+                "dtnumber" => $row["dtnumber"], "document_title" => $row["document_title"], "doc_type" => $row["doc_type"], "document_origin" => $row["document_origin"], "date_received" => $row["date_received"], "document_destination" => $row["document_destination"], "tag" => $row["tag"]
+            ));
+        }
 
+        $data_body = array("status" => "success", "data" => $data);
+        $response->getBody()->write(json_encode($data_body));
+    } else {
 
-array_push($data,array(
-"dtnumber"=>$row["dtnumber"]
-,"document_title"=>$row["document_title"]
-,"doc_type"=>$row["doc_type"]
-,"document_origin"=>$row["document_origin"]
-,"date_recieved"=>$row["date_recieved"]
-,"document_destination"=>$row["document_destination"]
-,"tag"=>$row["tag"]));
-}
+        $response->getBody()->write(array("status" => "success", "data" => null));
+    }
+    $conn->close();
 
-$data_body=array("status"=>"success","data"=>$data);
-$response->getBody()->write(json_encode($data_body));
-} else {
-
-$response->getBody()->write(array("status"=>"success","data"=>null));
-}
-$conn->close();
-
-return $response;
+    return $response;
 });
 
 /**********DELETE DOCUMENT VIA ID/NUMBER********** */
 
 $app->post('/deleteDoc', function (Request $request, Response $response, array $args) {
 
-$data=json_decode($request->getBody());
-$dtnumber =$data->dtnumber;
+    $data = json_decode($request->getBody());
+    $dtnumber = $data->dtnumber;
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "dtsystem";;
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
-}
-$sql = "DELETE FROM document_Fields where dtnumber='". $dtnumber ."'";
-if ($conn->query($sql) === TRUE) {
-$response->getBody()->write(json_encode(array("status"=>"success","data"=>null)));
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "dtsystem";;
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $sql = "DELETE FROM document_fields where dtnumber='" . $dtnumber . "'";
+    if ($conn->query($sql) === TRUE) {
+        $response->getBody()->write(json_encode(array("status" => "success", "data" => null)));
+    }
+    $conn->close();
 
-}
-$conn->close();
-
-return $response;
+    return $response;
 });
 
 
@@ -126,59 +151,51 @@ return $response;
 //*********************UPDATE DOCUMENT***************************
 
 $app->post('/updateDoc', function (Request $request, Response $response, array $args) {
-$data=json_decode($request->getBody());
+    $data = json_decode($request->getBody());
 
+    $dtnumber = $data->dtnumber;
+    $document_title = $data->document_title;
+    $doc_type = $data->doc_type;
+    $document_origin = $data->document_origin;
+    $date_received = $data->date_received;
+    $document_destination = $data->document_destination;
+    $tag = $data->tag;
 
+    //Database
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "dtsystem";
+    try {
+        $conn = new
 
-$dtnumber=$data->dtnumber;
-$document_title=$data->document_title;
-$doc_type=$data->doc_type;
-$document_origin=$data->document_origin;
-$date_recieved=$data->date_recieved;
-$document_destination=$data->document_destination;
-$tag=$data->tag;
+            PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 
+        // set the PDO error mode to exception
+        $conn->setAttribute(
+            PDO::ATTR_ERRMODE,
 
+            PDO::ERRMODE_EXCEPTION
+        );
 
+        $sql = "UPDATE document_fields set document_title='" . $document_title . "',doc_type='" . $doc_type . "',
+                document_origin='" . $document_origin . "',date_received='" . $date_received . "',
+                document_destination='" . $document_destination . "',tag='" . $tag . "' where dtnumber='" . $dtnumber . "'";
 
-//Database
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "dtsystem";;
-try {
-$conn = new
+        // use exec() because no results are returned
+        $conn->exec($sql);
+        $response->getBody()->write(json_encode(array("status" => "success", "data" => null)));
+    } catch (PDOException $e) {
+        $response->getBody()->write(json_encode(array(
+            "status" => "error",
 
-PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            "message" => $e->getMessage()
+        )));
+    }
+    $conn = null;
 
-// set the PDO error mode to exception
-$conn->setAttribute(PDO::ATTR_ERRMODE,
-
-PDO::ERRMODE_EXCEPTION);
-
-$sql = "UPDATE names set 
-
-document_title='".$document_title."',
-doc_type='".$doc_type."',
-document_origin='".$document_origin."',
-date_recieved='".$date_recieved."',
-document_destination='".$document_destination."',
-tag='".$tag."' where dtnumber='". $dtnumber ."'";
-
-// use exec() because no results are returned
-$conn->exec($sql);
-$response->getBody()->write(json_encode(array("status"=>"success","data"=>null)));
-
-} catch(PDOException $e){
-$response->getBody()->write(json_encode(array("status"=>"error",
-
-"message"=>$e->getMessage())));
-}
-$conn = null;
-
-return $response;
+    return $response;
 });
 
 
 $app->run();
-?>

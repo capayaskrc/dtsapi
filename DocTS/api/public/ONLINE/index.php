@@ -54,7 +54,7 @@ return $response;
 /**********FETCH/SEARCH SPECIFIC DOCUMENT VIA ID********** */
 //searchDoc
 
-$app->post('/searchDoc', function (Request $request, Response $response, array $args) {
+$app->post('/searchDoc/q={dtn}', function (Request $request, Response $response, array $args) {
 
 $data=json_decode($request->getBody());
 $dtnumber =$data->dtnumber;
@@ -203,7 +203,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
 die("Connection failed: " . $conn->connect_error);
 }
-$sql = "SELECT * FROM user_info where username='". $user ."' OR email='".$usermail.'"";
+$sql = "SELECT * FROM user_info where username='". $user ."' OR email='".$usermail."'";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
 $data=array();
@@ -229,4 +229,3 @@ return $response;
 
 
 $app->run();
-?>
