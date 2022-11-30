@@ -125,6 +125,49 @@ return $response;
 });
 
 
+//************INSERTING DATA TO DATABASE VIA API**************************
+//insertDoc
+$app->post('/insertDoc', function (Request $request, Response $response, array $args) {
+    $data=json_decode($request->getBody());
+    //fields
+    $dtnumber=$data->dtnumber;
+    $document_title=$data->document_title;
+    $doc_type=$data->doc_type;
+    $document_origin=$data->document_origin;
+    $date_recieved=$data->date_recieved;
+    $document_destination=$data->document_destination;
+    $tag=$data->tag;
+    
+    //Database
+    $servername = "sql578.main-hosting.eu";
+    $username = "u475920781_Dts4d";
+    $password = "Dts4d2022";
+    $dbname = "u475920781_Dts4d";
+    
+    try {
+    
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname",$username, $password);
+    
+    // set the PDO error mode to exception
+    $conn->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+    
+    $sql = "INSERT INTO document_fields (dtnumber,document_title,doc_type,document_origin,date_recieved,document_destination,tag)
+    VALUES ('". $dtnumber ."','". $document_title ."','". $doc_type ."','". $document_origin ."','". $date_recieved ."'
+    ,'". $document_destination ."','". $tag ."')";
+    // use exec() because no results are returned
+    $conn->exec($sql);
+    $response->getBody()->write(json_encode(array("status"=>"success","data"=>null)));
+    
+    } catch(PDOException $e){
+    $response->getBody()->write(json_encode(array("status"=>"error",
+    "message"=>$e->getMessage())));
+    }
+    $conn = null;
+    
+    return $response;
+    });
+
+
 
 //*********************UPDATE DOCUMENT***************************
 
@@ -182,7 +225,7 @@ $conn = null;
 return $response;
 });
 
-/**************FETCH USER DETAIL FOR VALIDATION************ */
+    /**************FETCH USER DETAIL FOR VALIDATION************ */
 
 //validateUser
 
