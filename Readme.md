@@ -4,7 +4,7 @@
     
     DocTs/api/public/index.php
 
-## 1. fetchDoc
+## 1. /fetchDoc
 
 ### Description:
 Fetch the data from database.
@@ -12,12 +12,12 @@ Fetch the data from database.
 
 ### Fields:
     {
-    'dtnumber'='00001',
-    'document_title'='Document1',
-    'doc_type'='PDF',
-    'document_origin'='User001',
-    'date_recieved'= '11-19-2022',
-    'document_destination'='Destination of the Document',
+    'dtnumber':'00001',
+    'document_title':'Document1',
+    'doc_type':'PDF',
+    'document_origin':'User001',
+    'date_recieved':'11-19-2022',
+    'document_destination':'Destination of the Document',
     'tag'='education'
      }
 
@@ -62,6 +62,8 @@ Fetch the data from database.
     });
 
 ### Output sample
+
+#### Response
         {
             "status": "success",
             "data": [
@@ -77,7 +79,7 @@ Fetch the data from database.
             ]
         }
 
-## 2. searchDoc
+## 2. /searchDoc
 Search documement via dtnumber or Document Tracking Number.
 
 ## PHP CODE
@@ -112,12 +114,52 @@ Search documement via dtnumber or Document Tracking Number.
     }$conn->close();
         return $response;
         });
+        
+        
+### Output sample
+
+#### Request
+
+        {
+            "data": [
+                {
+                    "dtnumber": "XXXX-XXX1",
+                }
+            ]
+        }
+
+
+
+#### Response
+
+If there are no errors or issues encountered.
+        {
+            "status": "success",
+            "data": [
+                {
+                    "dtnumber": "XXXX-XXX1",
+                    "document_title": "1",
+                    "doc_type": "1",
+                    "document_origin": "1",
+                    "date_recieved": "1",
+                    "document_destination": "1",
+                    "tag": "1"
+                }
+            ]
+        }
+        
+ If there are errors or issues encountered.
+ 
+         {
+            "status": "success",
+            "data": []
+        }
+        
 
 
 
 
-
-## 3. deleteDoc
+## 3. /deleteDoc
 Delete Document and its Details in the Record.
 
 
@@ -145,7 +187,7 @@ Delete Document and its Details in the Record.
 
 
 
-## 4. updateDoc
+## 4. /updateDoc
 Update Document details.
 
 
@@ -165,7 +207,7 @@ Update Document details.
     $password = "";
     $dbname = "u475920781_Dts4d";
     try {
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);$conn->setAttribute(PDO::ATTR_ERRMODEPDO::ERRMODE_EXCEPTION);
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname",         $username,$password);$conn>setAttribute(PDO::ATTR_ERRMODEPDO::ERRMODE_EXCEPTION);
     $sql = "UPDATE names set 
     document_title='".$document_title."',
     doc_type='".$doc_type."',
@@ -183,7 +225,8 @@ Update Document details.
         });
 
 
-## 5. insertDoc
+## 5. /insertDoc
+
 Insert new Document to database.
 
 
@@ -230,7 +273,7 @@ Insert new Document to database.
     });
     
    
- ## 6. validateUser
+ ## 6. /validateUser
  Retrieve User Log in information from database for User log in Validation
    
  ## PHP CODE
