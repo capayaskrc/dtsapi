@@ -64,6 +64,7 @@ Fetch the data from database.
 ### Output sample
 
 #### Response
+
         {
             "status": "success",
             "data": [
@@ -119,7 +120,6 @@ Search documement via dtnumber or Document Tracking Number.
 ### Output sample
 
 #### Request
-
         {
             "data": [
                 {
@@ -133,6 +133,7 @@ Search documement via dtnumber or Document Tracking Number.
 #### Response
 
 If there are no errors or issues encountered.
+
         {
             "status": "success",
             "data": [
