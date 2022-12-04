@@ -272,4 +272,34 @@ $app->post('/addUser', function (Request $request, Response $response, array $ar
     return $response;
 });
 
+$app->post('/fetchUsers', function (Request $request, Response $response, array $args) { //Database
+
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "dtsystem";
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $sql = "SELECT * FROM user_info";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($data, array(
+                "userid" => $row["userid"], "username" => $row["username"], "name" => $row["name"], "email" => $row["email"], "role" => $row["role"], "status" => $row["status"], "position" => $row["position"], "profile_picture" => $row["profile_picture"]
+            ));
+        }
+        $data_body = array("status" => "success", "data" => $data);
+        $response->getBody()->write(json_encode($data_body));
+    } else {
+        $response->getBody()->write(array("status" => "success", "data" => null));
+    }
+    $conn->close();
+    return $response;
+});
+
 $app->run();
