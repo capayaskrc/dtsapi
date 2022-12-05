@@ -340,5 +340,43 @@ $app->post('/searchUser', function (Request $request, Response $response, array 
 
     return $response;
 });
+$app->post('/trackDoc', function (Request $request, Response $response, array $args) {
+
+    $data = json_decode($request->getBody());
+    $q = $data->q;
+
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "dtsystem";
+
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $sql = "SELECT * FROM document_fields WHERE dtnumber='" . $q . "' OR document_title='" . $q .
+        "' OR doc_type='" . $q . "' OR document_origin='" . $q . "' OR date_received='" . $q .
+        "' OR document_destination='" . $q . "' OR tag='" . $q . "'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($data, array(
+                "dtnumber" => $row["dtnumber"], "document_title" => $row["document_title"], "doc_type" => $row["doc_type"], "document_origin" => $row["document_origin"], "date_received" => $row["date_received"], "document_destination" => $row["document_destination"], "tag" => $row["tag"]
+            ));
+        }
+
+        $data_body = array("status" => "success", "data" => $data);
+        $response->getBody()->write(json_encode($data_body));
+    } else {
+
+        $response->getBody()->write(array("status" => "success", "data" => null));
+    }
+    $conn->close();
+
+    return $response;
+});
 
 $app->run();
+
