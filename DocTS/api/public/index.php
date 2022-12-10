@@ -198,39 +198,41 @@ $app->post('/updateDoc', function (Request $request, Response $response, array $
 });
 
 //endpoint LOGIN (just a sample code)
-// $app->post('/login', function (Request $request, Response $response, array
-// $args) {
-//     $data = json_decode($request->getBody());
-//     $uname = $data->username;
-//     $pw = $data->password;
-//     //Database
-//     $servername = "localhost";
-//     $username = "root";
-//     $password = "";
-//     $dbname = "prac";
-//     // Create connection
-//     $conn = new mysqli($servername, $username, $password, $dbname);
-//     // Check connection
-//     if ($conn->connect_error) {
-//         die("Connection failed: " . $conn->connect_error);
-//     }
-//     $sql = "SELECT * FROM prac_tbl where username='" . $uname . "'" . " AND `password`='" . $pw . "'";
-//     $result = $conn->query($sql);
-//     if ($result->num_rows > 0) {
-//         // $data = array();
-//         while ($row = $result->fetch_assoc()) {
-//             $data = array(
-//                 "username" => $row["username"], "email" => $row["email"]
-//             );
-//         }
-//         $data_body = array("status" => "success", "data" => $data);
-//         $response->getBody()->write(json_encode($data_body));
-//     } else {
-//         $response->getBody()->write(array("status" => "success", "data" => null));
-//     }
-//     $conn->close();
-//     return $response;
-// });
+$app->post('/login', function (Request $request, Response $response, array $args) {
+    $data = json_decode($request->getBody());
+    $email = $data->email;
+    $role = $data->role;
+    $pw = $data->password;
+    //Database
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "dtsystem";
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $sql = "SELECT * FROM user_info where email='" . $email . "'" . " AND `role`='" . $role . "'" . " AND `password`='" . $pw . "'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        // $data = array();
+        while ($row = $result->fetch_assoc()) {
+            $data = array(
+                "userid" => $row["userid"], "email" => $row["email"],
+                "username" => $row["username"], "role" => $row["role"],
+                "name" => $row["name"], "position" => $row["position"],
+            );
+        }
+        $data_body = array("status" => "success", "data" => $data);
+        $response->getBody()->write(json_encode($data_body));
+    } else {
+        $response->getBody()->write(array("status" => "success", "data" => null));
+    }
+    $conn->close();
+    return $response;
+});
 
 //endpoint Add User
 $app->post('/addUser', function (Request $request, Response $response, array $args) {
@@ -340,6 +342,7 @@ $app->post('/searchUser', function (Request $request, Response $response, array 
 
     return $response;
 });
+
 $app->post('/trackDoc', function (Request $request, Response $response, array $args) {
 
     $data = json_decode($request->getBody());
@@ -379,4 +382,3 @@ $app->post('/trackDoc', function (Request $request, Response $response, array $a
 });
 
 $app->run();
-
