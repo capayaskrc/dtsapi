@@ -214,16 +214,19 @@ $app->post('/login', function (Request $request, Response $response, array $args
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-    $sql = "SELECT * FROM user_info where email='" . $email . "'" . " AND `role`='" . $role . "'" . " AND `password`='" . $pw . "'";
+    // $sql = "SELECT * FROM user_info where email='" . $email . "'" . " AND `role`='" . $role . "'" . " AND `password`='" . $pw . "'";
+    $sql = "SELECT * FROM user_info where email='" . $email . "'" . " AND `role`='" . $role . "'";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         // $data = array();
         while ($row = $result->fetch_assoc()) {
-            $data = array(
-                "userid" => $row["userid"], "email" => $row["email"],
-                "username" => $row["username"], "role" => $row["role"],
-                "name" => $row["name"], "position" => $row["position"],
-            );
+            if (password_verify($pw, $row['password'])) {
+                $data = array(
+                    "userid" => $row["userid"], "email" => $row["email"],
+                    "username" => $row["username"], "role" => $row["role"],
+                    "name" => $row["name"], "position" => $row["position"],
+                );
+            }
         }
         $data_body = array("status" => "success", "data" => $data);
         $response->getBody()->write(json_encode($data_body));
