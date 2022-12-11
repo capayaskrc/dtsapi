@@ -237,6 +237,42 @@ $app->post('/login', function (Request $request, Response $response, array $args
     return $response;
 });
 
+// endpoint change password
+$app->post('/changePassword', function (Request $request, Response $response, array $args) {
+    $data = json_decode($request->getBody());
+    $userid = $data->userid;
+    $current_pw = $data->current_password;
+    // $new_pw = $data->new_password;
+    $new_pw = password_hash($data->new_password, PASSWORD_DEFAULT);
+    //Database
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "dtsystem";
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $sql = "SELECT * FROM user_info where userid='" . $userid . "'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        // $data = array();
+        while ($row = $result->fetch_assoc()) {
+            if (password_verify($current_pw, $row['password'])) {
+                $sql = "UPDATE user_info set `password`='" . $new_pw . "' where userid='" . $userid . "'";
+            }
+        }
+        $conn->query($sql);
+        $response->getBody()->write(json_encode(array("status" => "success", "data" => null)));
+    } else {
+        $response->getBody()->write(array("status" => "success", "data" => null));
+    }
+    $conn->close();
+    return $response;
+});
+
 //endpoint Add User
 $app->post('/addUser', function (Request $request, Response $response, array $args) {
     $data = json_decode($request->getBody());
