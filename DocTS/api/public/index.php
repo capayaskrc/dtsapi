@@ -487,4 +487,34 @@ $app->post('/addSchool', function (Request $request, Response $response, array $
     return $response;
 });
 
+$app->post('/fetchSchools', function (Request $request, Response $response, array $args) { //Database
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "dtsystem";
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $sql = "SELECT * FROM school";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($data, array(
+                "id" => $row["id"], "school_name" => $row["school_name"]
+            ));
+        }
+        $data_body = array("status" => "success", "data" => $data);
+        $response->getBody()->write(json_encode($data_body));
+    } else {
+        $response->getBody()->write(array("status" => "success", "data" => null));
+    }
+    $conn->close();
+    return $response;
+});
+
+
 $app->run();
