@@ -224,6 +224,7 @@ $app->post('/login', function (Request $request, Response $response, array $args
                 $data = array(
                     "userid" => $row["userid"], "email" => $row["email"],
                     "username" => $row["username"], "role" => $row["role"],
+                    "profile_pic" => $row["profile_picture"],
                     "name" => $row["name"], "position" => $row["position"],
                 );
             }
