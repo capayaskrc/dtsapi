@@ -457,4 +457,34 @@ $app->post('/changeProfilePic', function (Request $request, Response $response, 
     return $response;
 });
 
+$app->post('/addSchool', function (Request $request, Response $response, array $args) {
+    $data = json_decode($request->getBody());
+    $school_name = $data->school_name;
+
+    $pref = substr($data->id, 0, 5);
+    $uid = strtoupper(uniqid($pref));
+
+    //Database
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "dtsystem";
+    try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        // set the PDO error mode to exception
+        $conn->setAttribute(
+            PDO::ATTR_ERRMODE,
+            PDO::ERRMODE_EXCEPTION
+        );
+        $sql = "INSERT INTO school (school_name) VALUES ('" . $school_name . "')";
+        // use exec() because no results are returned
+        $conn->exec($sql);
+        $response->getBody()->write(json_encode(array("status" => "success", "data" => null)));
+    } catch (PDOException $e) {
+        $response->getBody()->write(json_encode(array("status" => "error", "message" => $e->getMessage())));
+    }
+    $conn = null;
+    return $response;
+});
+
 $app->run();
