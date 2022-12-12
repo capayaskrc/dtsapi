@@ -382,6 +382,7 @@ $app->post('/searchUser', function (Request $request, Response $response, array 
     return $response;
 });
 
+// Endpoit Track document
 $app->post('/trackDoc', function (Request $request, Response $response, array $args) {
 
     $data = json_decode($request->getBody());
@@ -416,6 +417,41 @@ $app->post('/trackDoc', function (Request $request, Response $response, array $a
         $response->getBody()->write(array("status" => "success", "data" => null));
     }
     $conn->close();
+
+    return $response;
+});
+
+// Change profile pic
+$app->post('/changeProfilePic', function (Request $request, Response $response, array $args) {
+    $data = json_decode($request->getBody());
+    $userid = $data->userid;
+    $img = $data->img;
+
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "dtsystem";
+    try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+
+        // set the PDO error mode to exception
+        $conn->setAttribute(
+            PDO::ATTR_ERRMODE,
+            PDO::ERRMODE_EXCEPTION
+        );
+
+        $sql = "UPDATE user_info set profile_picture='" . $img . "' where userid='" . $userid . "'";
+
+        // use exec() because no results are returned
+        $conn->exec($sql);
+        $response->getBody()->write(json_encode(array("status" => "success", "data" => null)));
+    } catch (PDOException $e) {
+        $response->getBody()->write(json_encode(array(
+            "status" => "error",
+            "message" => $e->getMessage()
+        )));
+    }
+    $conn = null;
 
     return $response;
 });
