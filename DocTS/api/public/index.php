@@ -16,9 +16,10 @@ $app->post(
         $document_title = $data->document_title;
         $doc_type = $data->doc_type;
         $document_origin = $data->document_origin;
-        $date_received = $data->date_received;
+        $date_sent = $data->date_sent;
         $document_destination = $data->document_destination;
         $tag = $data->tag;
+        $attachment = $data->attachment;
 
         //Database
         $servername = "localhost";
@@ -32,9 +33,9 @@ $app->post(
                 PDO::ATTR_ERRMODE,
                 PDO::ERRMODE_EXCEPTION
             );
-            $sql = "INSERT INTO document_fields (dtnumber,document_title,doc_type,document_origin,date_received,document_destination,tag)
+            $sql = "INSERT INTO document_fields (dtnumber,document_title,doc_type,document_origin,date_sent,document_destination,tag,attachment)
         VALUES ('" . $dtnumber . "','" . $document_title . "','" . $doc_type . "','" . $document_origin .
-                "','" . $date_received . "','" . $document_destination . "','" . $tag . "')";
+                "','" . $date_sent . "','" . $document_destination . "','" . $tag . "','" . $attachment . "')";
             // use exec() because no results are returned
             $conn->exec($sql);
             $response->getBody()->write(json_encode(array("status" => "success", "data" => null)));
@@ -67,7 +68,10 @@ $app->post('/fetchDoc', function (Request $request, Response $response, array $a
         $data = array();
         while ($row = $result->fetch_assoc()) {
             array_push($data, array(
-                "dtnumber" => $row["dtnumber"], "document_title" => $row["document_title"], "doc_type" => $row["doc_type"], "document_origin" => $row["document_origin"], "date_received" => $row["date_received"], "document_destination" => $row["document_destination"], "tag" => $row["tag"]
+                "dtnumber" => $row["dtnumber"], "document_title" => $row["document_title"],
+                "doc_type" => $row["doc_type"], "document_origin" => $row["document_origin"],
+                "date_received" => $row["date_received"], "document_destination" => $row["document_destination"],
+                "tag" => $row["tag"], "date_sent" => $row["date_sent"], "attachment" => $row["attachment"]
             ));
         }
         $data_body = array("status" => "success", "data" => $data);
@@ -105,7 +109,10 @@ $app->post('/searchDoc', function (Request $request, Response $response, array $
         $data = array();
         while ($row = $result->fetch_assoc()) {
             array_push($data, array(
-                "dtnumber" => $row["dtnumber"], "document_title" => $row["document_title"], "doc_type" => $row["doc_type"], "document_origin" => $row["document_origin"], "date_received" => $row["date_received"], "document_destination" => $row["document_destination"], "tag" => $row["tag"]
+                "dtnumber" => $row["dtnumber"], "document_title" => $row["document_title"],
+                "doc_type" => $row["doc_type"], "document_origin" => $row["document_origin"],
+                "date_received" => $row["date_received"], "document_destination" => $row["document_destination"],
+                "tag" => $row["tag"], "date_sent" => $row["date_sent"], "attachment" => $row["attachment"]
             ));
         }
 
@@ -224,7 +231,7 @@ $app->post('/login', function (Request $request, Response $response, array $args
                 $data = array(
                     "userid" => $row["userid"], "email" => $row["email"],
                     "username" => $row["username"], "role" => $row["role"],
-                    "profile_pic" => $row["profile_picture"],
+                    "profile_pic" => $row["profile_picture"], "school" => $row["school"],
                     "name" => $row["name"], "position" => $row["position"],
                 );
             }
