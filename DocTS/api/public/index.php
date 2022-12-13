@@ -668,4 +668,76 @@ $app->post('/receiveDoc', function (Request $request, Response $response, array 
     return $response;
 });
 
+$app->post('/fetchReceivedDoc', function (Request $request, Response $response, array $args) { //Database
+    $data = json_decode($request->getBody());
+    $userSchool = $data->userSchool;
+
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "dtsystem";
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $sql = "SELECT * FROM document_fields where `receive`='true' and document_destination='" . $userSchool . "'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($data, array(
+                "dtnumber" => $row["dtnumber"], "document_title" => $row["document_title"],
+                "doc_type" => $row["doc_type"], "document_origin" => $row["document_origin"],
+                "date_received" => $row["date_received"], "receive" => $row["receive"],
+                "document_destination" => $row["document_destination"], "tag" => $row["tag"],
+                "date_sent" => $row["date_sent"], "attachment" => $row["attachment"]
+            ));
+        }
+        $data_body = array("status" => "success", "data" => $data);
+        $response->getBody()->write(json_encode($data_body));
+    } else {
+        $response->getBody()->write(array("status" => "success", "data" => null));
+    }
+    $conn->close();
+    return $response;
+});
+
+$app->post('/fetchOutgoingDoc', function (Request $request, Response $response, array $args) { //Database
+    $data = json_decode($request->getBody());
+    $userSchool = $data->userSchool;
+
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "dtsystem";
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $sql = "SELECT * FROM document_fields where `receive`='false' and document_origin='" . $userSchool . "'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($data, array(
+                "dtnumber" => $row["dtnumber"], "document_title" => $row["document_title"],
+                "doc_type" => $row["doc_type"], "document_origin" => $row["document_origin"],
+                "date_received" => $row["date_received"], "receive" => $row["receive"],
+                "document_destination" => $row["document_destination"], "tag" => $row["tag"],
+                "date_sent" => $row["date_sent"], "attachment" => $row["attachment"]
+            ));
+        }
+        $data_body = array("status" => "success", "data" => $data);
+        $response->getBody()->write(json_encode($data_body));
+    } else {
+        $response->getBody()->write(array("status" => "success", "data" => null));
+    }
+    $conn->close();
+    return $response;
+});
+
 $app->run();
