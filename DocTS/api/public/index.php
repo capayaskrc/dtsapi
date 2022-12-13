@@ -286,6 +286,7 @@ $app->post('/addUser', function (Request $request, Response $response, array $ar
     $role = $data->role;
     $position = $data->position;
     $status = $data->status;
+    $school = $data->school;
 
     $pref = substr($data->id, 0, 5);
     $uid = strtoupper(uniqid($pref));
@@ -302,8 +303,8 @@ $app->post('/addUser', function (Request $request, Response $response, array $ar
             PDO::ATTR_ERRMODE,
             PDO::ERRMODE_EXCEPTION
         );
-        $sql = "INSERT INTO user_info (userid,username,email,`password`,profile_picture,`role`,`name`,position,`status`)
-        VALUES ('" . $uid . "','" . $uname . "','" . $email . "','" . $pw . "','" . $pp . "','" . $role . "','" . $name . "','" . $position . "','" . $status . "')";
+        $sql = "INSERT INTO user_info (userid,username,email,`password`,profile_picture,`role`,`name`,position,`status`,school)
+        VALUES ('" . $uid . "','" . $uname . "','" . $email . "','" . $pw . "','" . $pp . "','" . $role . "','" . $name . "','" . $position . "','" . $status . "','" . $school . "')";
         // use exec() because no results are returned
         $conn->exec($sql);
         $response->getBody()->write(json_encode(array("status" => "success", "data" => null)));
@@ -332,7 +333,7 @@ $app->post('/fetchUsers', function (Request $request, Response $response, array 
         $data = array();
         while ($row = $result->fetch_assoc()) {
             array_push($data, array(
-                "userid" => $row["userid"], "username" => $row["username"], "name" => $row["name"], "email" => $row["email"], "role" => $row["role"], "status" => $row["status"], "position" => $row["position"], "profile_picture" => $row["profile_picture"]
+                "userid" => $row["userid"], "username" => $row["username"], "name" => $row["name"], "email" => $row["email"], "role" => $row["role"], "status" => $row["status"], "position" => $row["position"], "profile_picture" => $row["profile_picture"], "school" => $row["school"]
             ));
         }
         $data_body = array("status" => "success", "data" => $data);
@@ -368,7 +369,7 @@ $app->post('/searchUser', function (Request $request, Response $response, array 
         $data = array();
         while ($row = $result->fetch_assoc()) {
             array_push($data, array(
-                "userid" => $row["userid"], "username" => $row["username"], "name" => $row["name"], "email" => $row["email"], "role" => $row["role"], "status" => $row["status"], "position" => $row["position"], "profile_picture" => $row["profile_picture"]
+                "userid" => $row["userid"], "username" => $row["username"], "name" => $row["name"], "email" => $row["email"], "role" => $row["role"], "status" => $row["status"], "position" => $row["position"], "profile_picture" => $row["profile_picture"], "school" => $row["school"]
             ));
         }
 
