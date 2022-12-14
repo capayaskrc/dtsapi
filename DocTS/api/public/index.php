@@ -86,7 +86,6 @@ $app->post('/fetchDoc', function (Request $request, Response $response, array $a
 });
 
 
-
 /**********FETCH/SEARCH SPECIFIC DOCUMENT VIA ID********** */
 //searchDoc
 
@@ -157,9 +156,7 @@ $app->post('/deleteDoc', function (Request $request, Response $response, array $
 });
 
 
-
-//*********************UPDATE DOCUMENT***************************
-
+// *********************UPDATE DOCUMENT***************************
 $app->post('/updateDoc', function (Request $request, Response $response, array $args) {
     $data = json_decode($request->getBody());
 
@@ -469,6 +466,7 @@ $app->post('/changeProfilePic', function (Request $request, Response $response, 
     return $response;
 });
 
+// endpoint add school/institution
 $app->post('/addSchool', function (Request $request, Response $response, array $args) {
     $data = json_decode($request->getBody());
     $school_name = $data->school_name;
@@ -499,6 +497,7 @@ $app->post('/addSchool', function (Request $request, Response $response, array $
     return $response;
 });
 
+// endpoint fetch schools (display)
 $app->post('/fetchSchools', function (Request $request, Response $response, array $args) { //Database
     $servername = "localhost";
     $username = "root";
@@ -528,6 +527,7 @@ $app->post('/fetchSchools', function (Request $request, Response $response, arra
     return $response;
 });
 
+// endpoint update school
 $app->post('/updateSchool', function (Request $request, Response $response, array $args) {
     $data = json_decode($request->getBody());
 
@@ -568,6 +568,7 @@ $app->post('/updateSchool', function (Request $request, Response $response, arra
     return $response;
 });
 
+// endpoint delete school
 $app->post('/deleteSchool', function (Request $request, Response $response, array $args) {
 
     $data = json_decode($request->getBody());
@@ -592,6 +593,7 @@ $app->post('/deleteSchool', function (Request $request, Response $response, arra
     return $response;
 });
 
+// endpoint fetch incoming documents (display)
 $app->post('/fetchIncomingDoc', function (Request $request, Response $response, array $args) { //Database
     $data = json_decode($request->getBody());
     $userSchool = $data->userSchool;
@@ -628,6 +630,7 @@ $app->post('/fetchIncomingDoc', function (Request $request, Response $response, 
     return $response;
 });
 
+// endpoint receive document
 $app->post('/receiveDoc', function (Request $request, Response $response, array $args) {
     $data = json_decode($request->getBody());
 
@@ -668,6 +671,7 @@ $app->post('/receiveDoc', function (Request $request, Response $response, array 
     return $response;
 });
 
+// endpoint fetch received documents (display)
 $app->post('/fetchReceivedDoc', function (Request $request, Response $response, array $args) { //Database
     $data = json_decode($request->getBody());
     $userSchool = $data->userSchool;
@@ -704,6 +708,7 @@ $app->post('/fetchReceivedDoc', function (Request $request, Response $response, 
     return $response;
 });
 
+// endpoint fetch Out going documents (display)
 $app->post('/fetchOutgoingDoc', function (Request $request, Response $response, array $args) { //Database
     $data = json_decode($request->getBody());
     $userSchool = $data->userSchool;
